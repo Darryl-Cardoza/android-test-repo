@@ -75,7 +75,6 @@ tasks.register('jacocoTestReport', JacocoReport) {
     group = "verification"
     description = "Generates JaCoCo coverage report for unit tests."
 
-    // Your project has only debug/release; unit tests typically run on Debug
     dependsOn 'testDebugUnitTest'
 
     reports {
@@ -123,14 +122,17 @@ tasks.register('jacocoTestReport', JacocoReport) {
             "src/main/kotlin"
     ))
 
-    executionData.setFrom(fileTree(dir: buildDir, includes: [
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
-    ]))
+    // ✅ Set execution data ONCE. No doFirst mutation.
+    executionData.setFrom(files(
+            fileTree(dir: buildDir, includes: [
+                    "jacoco/testDebugUnitTest.exec",
+                    "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+            ])
+    ))
 
-    // Avoid failures if exec file not generated (e.g., no tests)
-    doFirst {
-        executionData = files(executionData.files.findAll { it.exists() })
+    // ✅ Skip report task if exec data doesn't exist (prevents failure when no tests ran)
+    onlyIf {
+        executionData.files.any { it.exists() }
     }
 }
 
