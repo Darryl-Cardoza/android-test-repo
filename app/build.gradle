@@ -75,7 +75,8 @@ tasks.register('jacocoTestReport', JacocoReport) {
     group = "verification"
     description = "Generates JaCoCo coverage report for unit tests."
 
-    dependsOn 'testDebugUnitTest'
+    def v = (project.findProperty("coverageVariant") ?: "Debug").toString()
+    dependsOn "test${v}UnitTest"
 
     reports {
         xml.required = true
