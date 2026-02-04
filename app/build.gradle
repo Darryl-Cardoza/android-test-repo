@@ -110,7 +110,19 @@ tasks.register('jacocoTestReport', JacocoReport) {
             // Optional exclusions
             '**/*Dao*.*',
             '**/*Database*.*',
-            '**/*JsonAdapter*.*'
+            '**/*JsonAdapter*.*',
+
+            // DataBinding / generated
+            '**/databinding/**',
+            '**/*Binding*.*',
+            '**/BR.*',
+            '**/androidx/databinding/**',
+            '**/androidx/databinding/library/**',
+            '**/*DataBinderMapperImpl*.*',
+            '**/*DataBinderMapper*.*',
+            '**/*DataBindingTriggerClass*.*',
+            '**/generated/callback/**',
+
     ]
 
     def kotlinDebugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
