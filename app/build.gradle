@@ -29,7 +29,7 @@ android {
         }
         debug {
             // optional, but helps avoid 0% in some setups
-            testCoverageEnabled true
+            testCoverageEnabled false
         }
     }
 
