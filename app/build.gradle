@@ -1,6 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.11"
 }
 
 android {
@@ -22,17 +27,110 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            // optional, but helps avoid 0% in some setups
+            testCoverageEnabled true
+        }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
 
-    buildFeatures{
+    buildFeatures {
         dataBinding true
+    }
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']
+            }
+        }
+    }
+}
+
+/**
+ * Ensure the report runs after unit tests
+ */
+tasks.withType(Test).configureEach {
+    // Optional: keep only if you really need it; sometimes helps on JDK 17+ with Robolectric
+    jvmArgs "--add-opens=java.base/java.lang=ALL-UNNAMED"
+    finalizedBy 'jacocoTestReport'
+}
+
+/**
+ * JaCoCo report task (XML + HTML)
+ * Output XML path:
+ * app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+ */
+tasks.register('jacocoTestReport', JacocoReport) {
+    group = "verification"
+    description = "Generates JaCoCo coverage report for unit tests."
+
+    // Your project has only debug/release; unit tests typically run on Debug
+    dependsOn 'testDebugUnitTest'
+
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+
+    def fileFilter = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/*Test*.*',
+            'android/**/*.*',
+
+            // Common generated/DI
+            '**/*_Factory*',
+            '**/*_MembersInjector*',
+            '**/*Hilt*.*',
+            '**/*Dagger*.*',
+            '**/*Module*.*',
+            '**/*Component*.*',
+
+            // Kotlin generated
+            '**/*$Companion*.*',
+            '**/*$Lambda$*.*',
+            '**/*$inlined$*.*',
+            '**/*$DefaultImpls*.*',
+            '**/*$serializer*.*',
+
+            // Optional exclusions
+            '**/*Dao*.*',
+            '**/*Database*.*',
+            '**/*JsonAdapter*.*'
+    ]
+
+    def kotlinDebugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def javaDebugTree   = fileTree(dir: "$buildDir/intermediates/javac/debug/classes", excludes: fileFilter)
+
+    classDirectories.setFrom(files(kotlinDebugTree, javaDebugTree))
+
+    sourceDirectories.setFrom(files(
+            "src/main/java",
+            "src/main/kotlin"
+    ))
+
+    executionData.setFrom(fileTree(dir: buildDir, includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+    ]))
+
+    // Avoid failures if exec file not generated (e.g., no tests)
+    doFirst {
+        executionData = files(executionData.files.findAll { it.exists() })
     }
 }
 
@@ -52,9 +150,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    //Added sperately for testing
     testImplementation "androidx.arch.core:core-testing:$arch_version"
     testImplementation "com.google.truth:truth:1.1.4"
     testImplementation "org.mockito:mockito-core:5.4.0"
-
 }
