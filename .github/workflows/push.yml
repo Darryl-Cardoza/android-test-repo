@@ -16,7 +16,7 @@ jobs:
   # CI for PRs and branch pushes
   ci:
     if: ${{ !startsWith(github.ref, 'refs/tags/v') }}
-    uses: Darryl-Cardoza/android-test-repo/.github/workflows/push.yml@main
+    uses: Darryl-Cardoza/reusable-repo-android/.github/workflows/push.yml@main
     with:
       java_version: "17"
       build_variant: "Debug"
@@ -25,7 +25,7 @@ jobs:
   # CD for version tags
   cd:
     if: startsWith(github.ref, 'refs/tags/v')
-    uses: Darryl-Cardoza/android-test-repo/.github/workflows/release.yml@main
+    uses: Darryl-Cardoza/reusable-repo-android/.github/workflows/release.yml@main
     with:
       java_version: "17"
       build_variant: "Release"
