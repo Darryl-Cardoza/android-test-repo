@@ -1,11 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'jacoco'
-}
-
-jacoco {
-    toolVersion = "0.8.11"
 }
 
 android {
@@ -44,108 +39,6 @@ android {
 
     buildFeatures {
         dataBinding true
-    }
-
-    testOptions {
-        unitTests.includeAndroidResources = true
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses = true
-                excludes = ['jdk.internal.*']
-            }
-        }
-    }
-}
-
-/**
- * Ensure the report runs after unit tests
- */
-tasks.withType(Test).configureEach {
-    // Optional: keep only if you really need it; sometimes helps on JDK 17+ with Robolectric
-    jvmArgs "--add-opens=java.base/java.lang=ALL-UNNAMED"
-    finalizedBy 'jacocoTestReport'
-}
-
-/**
- * JaCoCo report task (XML + HTML)
- * Output XML path:
- * app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
- */
-tasks.register('jacocoTestReport', JacocoReport) {
-    group = "verification"
-    description = "Generates JaCoCo coverage report for unit tests."
-
-    def v = (project.findProperty("coverageVariant") ?: "Debug").toString()
-    dependsOn "test${v}UnitTest"
-
-    reports {
-        xml.required = true
-        html.required = true
-        csv.required = false
-    }
-
-    def fileFilter = [
-            '**/R.class',
-            '**/R$*.class',
-            '**/BuildConfig.*',
-            '**/Manifest*.*',
-            '**/*Test*.*',
-            'android/**/*.*',
-
-            // Common generated/DI
-            '**/*_Factory*',
-            '**/*_MembersInjector*',
-            '**/*Hilt*.*',
-            '**/*Dagger*.*',
-            '**/*Module*.*',
-            '**/*Component*.*',
-
-            // Kotlin generated
-            '**/*$Companion*.*',
-            '**/*$Lambda$*.*',
-            '**/*$inlined$*.*',
-            '**/*$DefaultImpls*.*',
-            '**/*$serializer*.*',
-
-            // Optional exclusions
-            '**/*Dao*.*',
-            '**/*Database*.*',
-            '**/*JsonAdapter*.*',
-
-            // DataBinding / generated
-            '**/databinding/**',
-            '**/*Binding*.*',
-            '**/BR.*',
-            '**/androidx/databinding/**',
-            '**/androidx/databinding/library/**',
-            '**/*DataBinderMapperImpl*.*',
-            '**/*DataBinderMapper*.*',
-            '**/*DataBindingTriggerClass*.*',
-            '**/generated/callback/**',
-
-    ]
-
-    def kotlinDebugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-    def javaDebugTree   = fileTree(dir: "$buildDir/intermediates/javac/debug/classes", excludes: fileFilter)
-
-    classDirectories.setFrom(files(kotlinDebugTree, javaDebugTree))
-
-    sourceDirectories.setFrom(files(
-            "src/main/java",
-            "src/main/kotlin"
-    ))
-
-    // ✅ Set execution data ONCE. No doFirst mutation.
-    executionData.setFrom(files(
-            fileTree(dir: buildDir, includes: [
-                    "jacoco/testDebugUnitTest.exec",
-                    "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
-            ])
-    ))
-
-    // ✅ Skip report task if exec data doesn't exist (prevents failure when no tests ran)
-    onlyIf {
-        executionData.files.any { it.exists() }
     }
 }
 
