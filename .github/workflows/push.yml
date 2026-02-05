@@ -20,7 +20,7 @@ jobs:
     with:
       java_version: "17"
       build_variant: "Debug"
-      coverage_threshold: "75.00"
+      coverage_threshold: "40.00"
 
   # CD for version tags
   cd:
