@@ -30,4 +30,3 @@ jobs:
       java_version: "17"
       build_variant: "Release"
       coverage_threshold: "70.00"
-
