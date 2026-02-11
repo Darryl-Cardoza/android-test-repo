@@ -45,3 +45,4 @@ jobs:
       KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
       PLAYSTORE_SERVICE_ACCOUNT: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
 
+
