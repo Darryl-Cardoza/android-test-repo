@@ -57,7 +57,7 @@ jobs:
       deploy_to_playstore: true
       package_name: "com.devops.test"
       playstore_track: "internal"
-      playstore_status: "completed"
+      playstore_status: "draft"
 
       deploy_to_esper: false
 
