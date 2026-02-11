@@ -1,4 +1,4 @@
-package com.vaibhavmojidra.androidkotlindemounittesting
+package com.devops.test
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -1,10 +1,10 @@
-package com.vaibhavmojidra.androidkotlindemounittesting
+package com.devops.test
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.vaibhavmojidra.androidkotlindemounittesting.databinding.ActivityMainBinding
+import com.devops.test.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

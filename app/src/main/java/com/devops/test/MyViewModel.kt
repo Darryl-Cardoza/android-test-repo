@@ -1,7 +1,6 @@
-package com.vaibhavmojidra.androidkotlindemounittesting
+package com.devops.test
 
 import android.text.TextUtils
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

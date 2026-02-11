@@ -1,4 +1,4 @@
-package com.vaibhavmojidra.androidkotlindemounittesting
+package com.devops.test
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat

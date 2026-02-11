@@ -1,4 +1,4 @@
-package com.vaibhavmojidra.androidkotlindemounittesting
+package com.devops.test
 
 class MyCalculations:Calculations {
     private val PI=3.14

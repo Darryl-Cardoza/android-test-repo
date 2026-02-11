@@ -1,4 +1,4 @@
-package com.vaibhavmojidra.androidkotlindemounittesting
+package com.devops.test
 
 import org.junit.Test
 

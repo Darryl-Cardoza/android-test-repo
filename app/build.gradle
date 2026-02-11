@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.vaibhavmojidra.androidkotlindemounittesting'
+    namespace 'com.devops.test'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.vaibhavmojidra.androidkotlindemounittesting"
+        applicationId "com.devops.test"
         minSdk 24
         targetSdk 33
         versionCode 1

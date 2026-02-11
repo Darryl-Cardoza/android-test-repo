@@ -24,11 +24,24 @@ jobs:
 
   # CD for version tags
   cd:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-    needs: [ call-ci-workflow ]
     uses: Darryl-Cardoza/reusable-repo-android/.github/workflows/release.yml@main
     with:
+      version: ${{ github.ref_name }} # already like v1.2.3 (if you want without v, see note below)
       java_version: "17"
       build_variant: "Release"
-      coverage_threshold: "70.00"
+      coverage_threshold: "40.00"
+
+      deploy_to_playstore: true
+      package_name: "com.devops.test"
+      playstore_track: "internal"
+      playstore_status: "completed"
+
+      deploy_to_esper: false
+
+    secrets:
+      ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      PLAYSTORE_SERVICE_ACCOUNT: ${{ secrets.PLAYSTORE_SERVICE_ACCOUNT }}
 

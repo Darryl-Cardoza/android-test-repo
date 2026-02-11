@@ -3,7 +3,7 @@
     <data>
         <variable
             name="myViewModel"
-            type="com.vaibhavmojidra.androidkotlindemounittesting.MyViewModel" />
+            type="com.devops.test.MyViewModel" />
     </data>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
