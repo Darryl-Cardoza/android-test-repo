@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace 'com.devops.test'
-    compileSdk 33
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.devops.test"
         minSdk 24
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        targetSdk 36
+        versionCode 5
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
