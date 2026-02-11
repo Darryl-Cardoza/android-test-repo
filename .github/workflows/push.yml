@@ -13,9 +13,32 @@ permissions:
   contents: write
 
 jobs:
+
+  extract-version:
+    name: Extract App Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Extract versionName from build.gradle
+        id: version
+        run: |
+          # Assumes versionName "1.0.0"
+          version_string=$(grep versionName app/build.gradle | head -1 | sed -E 's/.*"(.*)".*/\1/')
+          echo "version=${version_string}" >> $GITHUB_OUTPUT
+          echo "Extracted version: ${version_string}"
+
+  #(Use this if Kotlin DSL is used in build.gradle.kts)
+  #version_string=$(grep versionName app/build.gradle.kts | sed -E 's/.*"(.*)".*/\1/')
+
   # CI for PRs and branch pushes
   ci:
     uses: Darryl-Cardoza/reusable-repo-android/.github/workflows/push.yml@main
+    needs: extract-version
     with:
       java_version: "17"
       build_variant: "Debug"
@@ -24,8 +47,9 @@ jobs:
   # CD for version tags
   cd:
     uses: Darryl-Cardoza/reusable-repo-android/.github/workflows/release.yml@main
+    needs: [ extract-version, ci ]
     with:
-      version: ${{ github.ref_name }} # already like v1.2.3 (if you want without v, see note below)
+      version: ${{ needs.extract-version.outputs.version }}
       java_version: "17"
       build_variant: "Release"
       coverage_threshold: "40.00"
