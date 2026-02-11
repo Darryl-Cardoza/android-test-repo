@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.devops.test'
-    compileSdk 36
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.devops.test"
         minSdk 24
-        targetSdk 36
+        targetSdk 33
         versionCode 5
         versionName "1.0.4"
 
